@@ -20,10 +20,31 @@ interface WeatherData {
     all: number;
   };
 }
+interface WeatherData {
+  name: string;
+  sys: {
+    country: string;
+  };
+  weather: {
+    description: string;
+    icon: string;
+  }[];
+  main: {
+    temp: number;
+    humidity: number;
+  };
+  wind: {
+    speed: number;
+  };
+  clouds: {
+    all: number;
+  };
+}
 const API_KEY = import.meta.env.VITE_REACT_APP_API_KEY;
 function App() {
   // const [currentTab, setCurrentTab] = useState("userweather");
-  const [weatherData, setWeatherData] = useState(null);
+  //const [weatherData, setWeatherData] = useState(null);
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
  // const [anyWeatherData, setAnyWeatherData] = useState(null);
  const [anyWeatherData, setAnyWeatherData] = useState<WeatherData | null>(null);
 
@@ -45,7 +66,7 @@ function App() {
       alert("Geolocation is not supported by this browser.");
     }
   }
-  async function showPosition(position) {
+  async function showPosition(position:GeolocationPosition) {
     const { latitude, longitude } = position.coords;
     setAccess(false);
     const response = await fetchWeatherData(latitude, longitude);
@@ -53,7 +74,7 @@ function App() {
     // console.log(response);
   }
 
-  async function fetchWeatherData(latitude, longitude) {
+  async function fetchWeatherData(latitude: number, longitude: number) {
     try {
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`
@@ -82,7 +103,7 @@ function App() {
   //   }
   // };
 
-  async function handleSearch(event) {
+  async function handleSearch(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
     if (!searchInput.trim()) return;
     const response = await fetch(
@@ -209,7 +230,12 @@ function App() {
             src={`http://openweathermap.org/img/w/${anyWeatherData?.weather?.[0]?.icon}.png`}
             alt="weather icon"
           />
-          {`${parseFloat(anyWeatherData?.main?.temp - 273.15 ).toFixed(1)}°C`}
+          {typeof anyWeatherData?.main?.temp === 'number' && (
+  <div>
+    {`${parseFloat((anyWeatherData?.main?.temp - 273.15).toFixed(1))}°C`}
+  </div>
+)}
+          {/* {`${parseFloat(anyWeatherData?.main?.temp - 273.15 ).toFixed(1)}°C`} */}
           <div className=" flex gap-[20px] my-4">
             <div className=" flex flex-col h-[150px]  w-[150px] rounded-md  justify-center items-center bg-blue-200 bg-opacity-50">
               <img src="wind.png" className="w-[50px]" />
@@ -248,7 +274,12 @@ function App() {
             src={`http://openweathermap.org/img/w/${weatherData?.weather?.[0]?.icon}.png`}
             alt="weather icon"
           />
-          {`${parseFloat(weatherData?.main?.temp - 273.15).toFixed(1)}°C`}
+          {/* {`${parseFloat(weatherData?.main?.temp - 273.15).toFixed(1)}°C`} */}
+          {typeof weatherData?.main?.temp === 'number' && (
+  <div>
+    {`${parseFloat((weatherData?.main?.temp - 273.15).toFixed(1))}°C`}
+  </div>
+)}
           <div className=" flex gap-[20px] my-4">
             <div className=" flex flex-col h-[150px]  w-[150px] rounded-md  justify-center items-center bg-blue-200 bg-opacity-50">
               <img src="wind.png" className="w-[50px]" />
