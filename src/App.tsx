@@ -1,11 +1,32 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import "./App.css";
-
+interface WeatherData {
+  name: string;
+  sys: {
+    country: string;
+  };
+  weather: {
+    description: string;
+    icon: string;
+  }[];
+  main: {
+    temp: number;
+    humidity: number;
+  };
+  wind: {
+    speed: number;
+  };
+  clouds: {
+    all: number;
+  };
+}
 const API_KEY = import.meta.env.VITE_REACT_APP_API_KEY;
 function App() {
   // const [currentTab, setCurrentTab] = useState("userweather");
   const [weatherData, setWeatherData] = useState(null);
-  const [anyWeatherData, setAnyWeatherData] = useState(null);
+ // const [anyWeatherData, setAnyWeatherData] = useState(null);
+ const [anyWeatherData, setAnyWeatherData] = useState<WeatherData | null>(null);
+
   const [searchInput, setSearchInput] = useState("");
   const [access, setAccess] = useState(true);
   const [mode, setMode] = useState("userWeather");
@@ -96,7 +117,7 @@ function App() {
 
   return (
     <div className=" wrapper w-screen h-screen p-2 flex flex-col  items-center ">
-      <h1 className="text-4xl font-semibold m-[50px]">WEATHER-WISE</h1>
+      <h1 className="text-4xl font-semibold m-[50px]">WEATHER REPORT</h1>
       <div className="flex w-[50%] justify-between font-semibold  ">
         <button
           onClick={() => setMode("userWeather")}
@@ -188,7 +209,7 @@ function App() {
             src={`http://openweathermap.org/img/w/${anyWeatherData?.weather?.[0]?.icon}.png`}
             alt="weather icon"
           />
-          {`${parseFloat(anyWeatherData?.main?.temp - 273.15).toFixed(1)}°C`}
+          {`${parseFloat(anyWeatherData?.main?.temp - 273.15 ).toFixed(1)}°C`}
           <div className=" flex gap-[20px] my-4">
             <div className=" flex flex-col h-[150px]  w-[150px] rounded-md  justify-center items-center bg-blue-200 bg-opacity-50">
               <img src="wind.png" className="w-[50px]" />
